@@ -15,7 +15,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Scheduler } from "@aldabil/react-scheduler";
 import dayjs from "dayjs";
-import swag from "./swag";
+import { EVENTS } from "./events";
 function Calendar() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [training, setTraining] = useState([]);
@@ -66,7 +66,7 @@ function Calendar() {
     }
   };
   const fetchTrainings = () => {
-    fetch("https://customerrest.herokuapp.com/gettrainings")
+    fetch("http://traineeapp.azurewebsites.net/api/trainings")
       .then((response) => response.json())
       .then((data) => setTraining(data));
   };
@@ -74,7 +74,6 @@ function Calendar() {
     fetchTrainings();
     convertTrainings();
 
-    console.log(swag);
     console.log("saa");
     console.log("haloo??");
   });

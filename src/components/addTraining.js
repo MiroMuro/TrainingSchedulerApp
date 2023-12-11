@@ -8,13 +8,14 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import TextField from "@mui/material/TextField";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import dayjs from "dayjs";
 function Addtraining(props) {
   // Komponenttiin täytyy luoda modaalinen tila
   // Dialogi toimii ikkunana
   const [open, setOpen] = React.useState(false);
   const [training, setTraining] = React.useState({
-    date: "",
+    date: "2019-11-27T09:00:00.000+0000",
     duration: "",
     activity: "",
     customer: props.customer.links[0].href,
@@ -25,22 +26,20 @@ function Addtraining(props) {
   };
 
   const handleClickClose = () => {
-    console.log("HCC");
     setOpen(false);
   };
   const handleInputChange = (event) => {
+    console.log("hello", event.target.value);
     setTraining({ ...training, [event?.target.name]: event?.target.value });
   };
-  const handleDateChange = (date) => {
-    setTraining({
-      ...training,
-      [date?.target.name]: date?.target.value,
-    });
+  const handleDateChange = (event) => {
+    console.log("BRUHUN", event);
   };
   const addTraining = () => {
-    training.date = dayjs(training.date).format();
-    props.appendTraining(training);
+    console.log("Alloo", training.date);
     console.log(training);
+    props.appendTraining(training);
+
     handleClickClose();
   };
   return (
@@ -55,12 +54,15 @@ function Addtraining(props) {
             Fill in the training information
           </DialogContentText>
           <TextField
+            inputProps={{
+              step: 1,
+            }}
             autoFocus
             name="date"
             id="date"
             type="datetime-local"
             value={training.date}
-            onChange={handleDateChange}
+            onChange={(e) => handleInputChange(e)}
             margin="dense"
             variant="outlined"
             fullWidth
