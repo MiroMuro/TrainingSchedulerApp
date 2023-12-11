@@ -52,7 +52,7 @@ function ListingApp() {
   };
 
   const fetchCustomers = () => {
-    fetch("https://customerrest.herokuapp.com/api/customers/")
+    fetch("http://traineeapp.azurewebsites.net/api/customers")
       .then((response) => response.json())
       .then((data) => setCustomers(data.content));
   };
@@ -96,7 +96,7 @@ function ListingApp() {
 
   const addTraining = (training) => {
     console.log(training);
-    fetch("https://customerrest.herokuapp.com/api/trainings", {
+    fetch("http://traineeapp.azurewebsites.net/api/trainings", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(training),

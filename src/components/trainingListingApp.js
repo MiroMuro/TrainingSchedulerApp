@@ -25,11 +25,11 @@ function TrainingListingApp() {
   };
   useEffect(() => {
     fetchTrainings();
-    console.log(cloneList);
+    console.log(training);
     console.log("as");
   }, []);
   const fetchTrainings = () => {
-    fetch("https://customerrest.herokuapp.com/gettrainings")
+    fetch("https://traineeapp.azurewebsites.net/gettrainings")
       .then((response) => response.json())
       .then((data) => setTraining(data));
   };
@@ -42,7 +42,7 @@ function TrainingListingApp() {
     if (
       window.confirm("Are you sure you want to delete this training?") == true
     ) {
-      fetch("https://customerrest.herokuapp.com/api/trainings/" + id, {
+      fetch("http://traineeapp.azurewebsites.net/api/trainings" + id, {
         method: "DELETE",
       }).then((response) => {
         if (response.ok) {
@@ -54,13 +54,14 @@ function TrainingListingApp() {
     } else {
     }
   };
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
     setOpen(false);
   };
-  const cloneList = [...training];
+
   const [trainings, setTrainings] = useState([
     {
       headerName: "Delete",
@@ -79,7 +80,9 @@ function TrainingListingApp() {
       field: "date",
       sortable: true,
       cellRenderer: (training) => {
-        return dayjs(training.data.date).format("DD/MM/YYYY HH:mm");
+        const c = new Date(training.data.date);
+        console.log(c.toLocaleString(), c.toLocaleTimeString());
+        return c.toLocaleString();
       },
       resizable: true,
     },
@@ -155,7 +158,7 @@ function TrainingListingApp() {
       </AppBar>
       <AgGridReact
         onGridReady={onGridReady}
-        rowData={cloneList}
+        rowData={training}
         columnDefs={trainings}
         paginationPageSize={10}
         pagination={true}

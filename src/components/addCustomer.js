@@ -36,7 +36,7 @@ function Addcustomer(props) {
   const addCustomer = () => {
     props.appendCustomer(
       customer,
-      "https://customerrest.herokuapp.com/api/customers/"
+      "http://traineeapp.azurewebsites.net/api/customers"
     );
     handleClickClose();
   };
