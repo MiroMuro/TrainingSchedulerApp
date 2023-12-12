@@ -15,11 +15,10 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Scheduler } from "@aldabil/react-scheduler";
 import dayjs from "dayjs";
-import { EVENTS } from "./events";
 function Calendar() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [training, setTraining] = useState([]);
-  const events2 = [];
+  const [x, setX] = useState("x");
   const [month, setMonth] = React.useState({
     weekDays: [0, 1, 2, 3, 4, 5, 6, 7],
     weekStartOn: 6,
@@ -41,42 +40,45 @@ function Calendar() {
     step: 60,
     navigation: true,
   });
-  const convertTrainings = () => {
-    for (let i = 0; i < training.length; i++) {
-      if (training[i].customer == null) {
-        i++;
-      } else {
-        let startDate = new Date(training[i].date);
-        let endDate = new Date(
-          startDate.getTime() + training[i].duration * 60000
-        );
-        let x = {
-          event_id: i + 1,
-          title:
-            training[i].activity +
-            " with " +
-            training[i].customer.firstname +
-            " " +
-            training[i].customer.lastname,
-          start: new Date(dayjs(startDate).format("YYYY/MM/DD HH:mm")),
-          end: new Date(dayjs(endDate).format("YYYY/MM/DD HH:mm")),
-        };
-        events2.push(x);
-      }
-    }
+  const addMinutes = (date, minutes) => {
+    date.setMinutes(date.getMinutes() + minutes);
+    return date;
   };
-  const fetchTrainings = () => {
-    fetch("http://traineeapp.azurewebsites.net/api/trainings")
-      .then((response) => response.json())
-      .then((data) => setTraining(data));
-  };
-  useEffect(() => {
-    fetchTrainings();
-    convertTrainings();
 
-    console.log("saa");
-    console.log("haloo??");
-  });
+  const deleteTraining = (id) => {
+    console.log(id);
+
+    fetch("http://traineeapp.azurewebsites.net/api/trainings/" + id, {
+      method: "DELETE",
+    }).then((response) => {
+      if (response.ok) {
+        console.log("Ok");
+        setX("changed");
+      } else {
+        console.log("Error");
+      }
+    });
+  };
+
+  useEffect(() => {
+    fetch("https://traineeapp.azurewebsites.net/gettrainings")
+      .then((response) => response.json())
+      .then((data) =>
+        setTraining(
+          data.map((training) => ({
+            event_id: training.id,
+            title: `${training.activity} with ${training.customer.firstname} ${training.customer.lastname}`,
+            start: new Date(training.date),
+            end: new Date(
+              addMinutes(new Date(training.date), training.duration)
+            ),
+            editable: true,
+            deletable: true,
+            customer: training.customer,
+          }))
+        )
+      );
+  }, [x]);
   return (
     <div>
       <AppBar position="static">
@@ -130,7 +132,8 @@ function Calendar() {
         day={day}
         week={week}
         month={month}
-        events={events2}
+        events={training}
+        onDelete={deleteTraining}
       />
     </div>
   );

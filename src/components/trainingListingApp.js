@@ -39,10 +39,11 @@ function TrainingListingApp() {
   };
 
   const deleteTraining = (id) => {
+    console.log(id);
     if (
-      window.confirm("Are you sure you want to delete this training?") == true
+      window.confirm("Are you sure you want to delete this training?") === true
     ) {
-      fetch("http://traineeapp.azurewebsites.net/api/trainings" + id, {
+      fetch("http://traineeapp.azurewebsites.net/api/trainings/" + id, {
         method: "DELETE",
       }).then((response) => {
         if (response.ok) {

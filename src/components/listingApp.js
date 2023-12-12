@@ -28,6 +28,7 @@ function ListingApp() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [customers, setCustomers] = useState([]);
   const [open, setOpen] = useState(false);
+  const rowStyle = { height: "44px" };
 
   useEffect(() => {
     fetchCustomers();
@@ -58,8 +59,9 @@ function ListingApp() {
   };
 
   const deleteCustomer = (url) => {
+    console.log("HALOO", url);
     if (
-      window.confirm("Are you sure you want to delete this customer?") == true
+      window.confirm("Are you sure you want to delete this customer?") === true
     ) {
       fetch(url, {
         method: "DELETE",
@@ -258,8 +260,9 @@ function ListingApp() {
         onGridReady={onGridReady}
         editType="fullRow"
         rowData={customers}
+        rowStyle={rowStyle}
         columnDefs={customer}
-        paginationPageSize={10}
+        paginationPageSize={12}
         pagination={true}
       ></AgGridReact>
     </div>
